@@ -13,11 +13,18 @@ constraints are defined in `AGENTS.md`.
 ```text
 .
 ├── .agents/
-│   └── skills/                 # Shared uv/pnpm member for Agent Skills
+│   ├── .claude-plugin/
+│   │   └── plugin.json         # Claude Code manifest; .agents is the plugin root
+│   ├── .codex-plugin/
+│   │   └── plugin.json         # Codex manifest; .agents is the plugin root
+│   └── skills/                 # Canonical shared uv/pnpm member for Agent Skills
 ├── .claude/
-│   └── skills -> ../.agents/skills # Claude Code view of the same skills
-├── apps/                        # Shared uv/pnpm deployable applications
-├── packages/                    # Shared uv/pnpm reusable packages
+│   └── skills -> ../.agents/skills  # Claude Code development-time view of canonical skills
+├── apps/                       # Shared uv/pnpm deployable applications
+├── packages/                   # Shared uv/pnpm reusable packages
+├── repos/                      # Optional child Git submodules for parent repositories
+│   └── .gitkeep                # Preserves the empty submodule placement directory
+├── .gitmodules                 # Empty until Git records child submodule metadata
 ├── .gitignore                  # Local artifacts and credentials excluded from Git
 ├── AGENTS.md                   # Agent operating constraints
 ├── CLAUDE.md                   # Claude Code entry point for the same constraints
@@ -33,3 +40,13 @@ constraints are defined in `AGENTS.md`.
 - Local execution state, credentials, and private evidence remain outside Git.
 - Reusable deterministic logic belongs in a package or skill-owned script.
 - Qualitative agent workflows are explicit, bounded, and self-describing.
+- `.agents/skills/` is the only source of truth for skills; `.claude/skills`
+  is a development-time relative link to it.
+- `.agents/` is the plugin root. Its manifests reference `./skills/`, which is
+  the physical skill directory in the Git subdirectory package.
+- `repos/` contains only optional child Git submodules; `.gitkeep` preserves
+  the placement directory before any child is added.
+- `.gitmodules` remains empty until `git submodule add` records each child's
+  required Git path and URL metadata.
+- Parent marketplaces select `.agents/` through a pinned Git subdirectory
+  source, independent of a parent repository's submodule checkout.

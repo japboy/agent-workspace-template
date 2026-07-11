@@ -7,6 +7,7 @@
 - Follow the architecture and design defined in `ARCHITECTURE.md` files
 - Maintain an `ARCHITECTURE.md` in every application and shared package directory, scoped to that directory. Add one to any other significant subdirectory when it owns distinct responsibilities, boundaries, data flows, or design decisions.
 - Before adding a directory for executable code or scripts, assess whether it belongs in the shared uv/pnpm workspace. Prefer an application in `apps/`, a reusable package in `packages/`, or a skill-owned script under `.agents/skills/` over a new root-level `scripts/` directory.
+- Reserve `repos/` for child Git submodules; do not add ordinary source files there.
 - Automate repetitive, deterministic tasks with scripts
 - Prefer Python for general scripting and automation
 - Consider creating an Agent Skill for reusable qualitative workflows that are not easy to script but can be reliably performed by an agent

@@ -1,0 +1,9 @@
+{
+  "name": {{ project_slug | tojson }},
+  "version": "0.1.0",
+  "description": {{ (project_description if project_description else "Reusable Agent Skills for " ~ project_name) | tojson }},
+  "author": {
+    "name": {{ project_name | tojson }}
+  },
+  "skills": "./skills/"
+}

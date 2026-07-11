@@ -1,0 +1,18 @@
+{
+  "name": {{ project_slug | tojson }},
+  "version": "0.1.0",
+  "description": {{ (project_description if project_description else "Reusable Agent Skills for " ~ project_name) | tojson }},
+  "author": {
+    "name": {{ project_name | tojson }}
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": {{ project_name | tojson }},
+    "shortDescription": {{ (project_description if project_description else "Reusable Agent Skills") | tojson }},
+    "longDescription": {{ (project_description if project_description else "Reusable Agent Skills for " ~ project_name) | tojson }},
+    "developerName": {{ project_name | tojson }},
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": {{ ("Use " ~ project_name ~ " skills.") | tojson }}
+  }
+}

@@ -26,13 +26,60 @@ Copier runs lock generation through `mise exec`; otherwise it uses compatible
 
 ## Generated baseline
 
-The generated repository includes agent instructions (`AGENTS.md`, with
-`CLAUDE.md` linked to it), repository architecture, and shared uv/pnpm workspace
-members in `.agents/skills`, `apps/*`, and `packages/*`. Public Python and npm
-packages use anonymous Takumi Guard proxies, dependency resolution has a
-three-day maturity window, and JavaScript dependency build scripts require
-explicit approval.
+- `project_slug` is the shared kebab-case repository, package, and plugin
+  identifier.
+- `AGENTS.md` and `CLAUDE.md` define agent operating constraints.
+- `ARCHITECTURE.md` owns repository-local architecture and invariants.
+- `.agents` is a self-contained Codex and Claude Code plugin; its `skills/`
+  directory is the shared uv and pnpm workspace member.
+- `.claude/skills` links to `.agents/skills` for local Claude Code discovery.
+- Public dependencies use Takumi Guard proxies, have a three-day maturity
+  window, and require explicit pnpm build-script approval.
+- Generated `README.md` files contain only the project title and description;
+  use them for project-specific purpose, audience, and onboarding.
 
-No agent-memory database or configuration is included.
+## Intended use case
 
-For Copier installation and advanced options, see the official [Copier documentation](https://copier.readthedocs.io/).
+Use this template for either role in a parent-and-child workspace. A child
+repository owns reusable Agent Skills. A parent repository groups child
+repositories for coordinated source review and catalogs their plugins for
+installation. Every generated repository can serve both roles.
+
+### Distribution flow
+
+```mermaid
+flowchart LR
+  subgraph Child["Child repository"]
+    Plugin[".agents plugin root"] --> Skills["skills/"]
+  end
+
+  subgraph Parent["Parent repository"]
+    Submodule["repos/child submodule"]
+    CodexMarket[".agents/plugins/marketplace.json"]
+    ClaudeMarket[".claude-plugin/marketplace.json"]
+  end
+
+  Child -->|"submodule checkout for source review"| Submodule
+  Codex["Codex"] --> CodexMarket
+  Claude["Claude Code"] --> ClaudeMarket
+  CodexMarket -->|"Git URL + git-subdir .agents + pinned SHA"| Plugin
+  ClaudeMarket -->|"Git URL + git-subdir .agents + pinned SHA"| Plugin
+```
+
+- `repos/` is reserved for child Git submodules. It is paired with an empty
+  `.gitmodules` file, which `git submodule add <url> repos/<child>` updates.
+- Parent repositories may use submodules for review and coordinated changes,
+  but marketplaces fetch each child from its own Git URL.
+- Each marketplace entry selects `.agents` with `git-subdir` and pins a full
+  child commit SHA.
+- Codex entries live in `.agents/plugins/marketplace.json` and use
+  `"path": "./.agents"`; Claude Code entries live in
+  `.claude-plugin/marketplace.json` and use `"path": ".agents"`.
+- Use `project_slug` for the Copier destination directory and Git repository
+  name; Copier cannot infer a remote repository name from its output path.
+
+## References
+
+- [Copier documentation](https://copier.readthedocs.io/)
+- [Codex plugin guide](https://learn.chatgpt.com/docs/build-plugins)
+- [Claude Code marketplace guide](https://code.claude.com/docs/en/plugin-marketplaces)

@@ -1,7 +1,15 @@
-# Agent Skills Architecture
+# Agent Skills and Plugin Architecture
 
-`.agents/skills/` contains repository-scoped Agent Skills and their bundled
-resources.
+`.agents/` is a self-contained Codex and Claude Code plugin directory.
+`.agents/skills/` is its canonical source for repository-scoped Agent Skills
+and bundled resources. `.claude/skills` is a relative symbolic link to this
+directory for Claude Code development-time discovery.
+
+Both manifests live under `.agents/` and package `./skills/` relative to that
+plugin root. Parent marketplaces distribute this directory with a Git
+subdirectory source, so installed plugins remain self-contained and do not
+depend on a parent repository's submodules or any path outside the copied
+plugin.
 
 ## Invariants
 

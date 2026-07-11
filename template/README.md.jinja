@@ -1,39 +1,3 @@
 # {{ project_name }}
 
 {{ project_description }}
-
-This repository is an AI-agent-ready uv and pnpm workspace.
-
-## Getting started
-
-Install the toolchain specified in `.tool-versions`, then synchronize the
-environment:
-
-```sh
-uv sync
-pnpm install
-```
-
-## Repository guides
-
-- `AGENTS.md` defines agent operating constraints.
-- `ARCHITECTURE.md` defines repository-level architecture and invariants.
-- `.agents/skills/` holds repository-scoped Agent Skills.
-- `apps/` contains deployable applications and services.
-- `packages/` contains reusable shared packages.
-- uv and pnpm share the `.agents/skills`, `apps/*`, and `packages/*` workspace
-  members. Each direct child package contains both `pyproject.toml` and
-  `package.json`.
-
-## Dependency policy
-
-uv and pnpm resolve only registry packages that have been published for at
-least three days. Commit `uv.lock` and `pnpm-lock.yaml` after reviewing changes.
-
-The default PyPI and npm registries route through Takumi Guard's anonymous,
-public package-registry proxies. They block known malicious public packages;
-this repository stores no registry credential.
-
-pnpm rejects dependency lifecycle build scripts unless their exact package and
-version are explicitly approved in `allowBuilds` in `pnpm-workspace.yaml`.
-Do not enable all dependency build scripts globally.
