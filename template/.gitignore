@@ -1,0 +1,10 @@
+# Python artifacts
+.venv/
+.pytest_cache/
+**/.pytest_cache/
+__pycache__/
+*.py[cod]
+
+# Node.js artifacts
+node_modules/
+pnpm-debug.log*

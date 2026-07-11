@@ -1,0 +1,25 @@
+[project]
+name = "{{ project_slug }}"
+version = "0.1.0"
+description = {{ project_description | tojson }}
+requires-python = "=={{ tool_versions.python }}"
+dependencies = []
+
+[tool.uv]
+required-version = "=={{ tool_versions.uv }}"
+# Only resolve distributions uploaded at least three days ago. This reduces
+# exposure to newly published compromised packages while `uv.lock` records the
+# exact selected artifacts.
+exclude-newer = "3 days"
+
+# Takumi Guard is the public, anonymous package-registry proxy operated by
+# GMO Flatt Security. It blocks known malicious public PyPI packages before
+# installation; no credential is stored in this repository.
+[[tool.uv.index]]
+name = "takumi-guard"
+url = "https://pypi.flatt.tech/simple/"
+default = true
+
+[tool.uv.workspace]
+members = [".agents/skills", "apps/*", "packages/*"]
+exclude = ["apps/*.md", "packages/*.md", "apps/.gitkeep", "packages/.gitkeep"]

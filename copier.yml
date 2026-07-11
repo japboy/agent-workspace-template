@@ -1,0 +1,59 @@
+_min_copier_version: "9.16.0"
+_subdirectory: template
+_preserve_symlinks: true
+
+tool_versions:
+  type: yaml
+  default:
+    python: "3.14.6"
+    uv: "0.11.28"
+    nodejs: "24.18.0"
+    pnpm: "11.10.0"
+  when: false
+
+_tasks:
+  - command: ["git", "init"]
+    when: "{{ git_initialization and _copier_operation == 'copy' }}"
+  - command: ["mise", "install", "--yes"]
+    when: "{{ toolchain_installation and _copier_operation == 'copy' }}"
+  - command: ["mise", "exec", "--", "uv", "lock"]
+    when: "{{ toolchain_installation and lockfile_generation and _copier_operation == 'copy' }}"
+  - command: ["mise", "exec", "--", "pnpm", "install", "--lockfile-only", "--ignore-scripts"]
+    when: "{{ toolchain_installation and lockfile_generation and _copier_operation == 'copy' }}"
+  - command: ["uv", "lock"]
+    when: "{{ not toolchain_installation and lockfile_generation and _copier_operation == 'copy' }}"
+  - command: ["pnpm", "install", "--lockfile-only", "--ignore-scripts"]
+    when: "{{ not toolchain_installation and lockfile_generation and _copier_operation == 'copy' }}"
+
+project_name:
+  type: str
+  help: Enter the display name of the repository.
+
+project_slug:
+  type: str
+  help: Enter the lowercase package identifier used as the Python/uv project name and npm namespace.
+  default: "{{ (project_name | lower | regex_replace('[^a-z0-9._-]+', '-') | regex_replace('^[^a-z0-9]+|[^a-z0-9]+$', '')) or 'project' }}"
+  validator: >-
+    {% if not (project_slug | regex_search('^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$')) %}
+    Enter a lowercase package identifier that starts and ends with a letter or digit and otherwise uses only letters, digits, periods, underscores, or hyphens.
+    {% endif %}
+
+project_description:
+  type: str
+  help: Enter a short description of the repository.
+  default: ""
+
+git_initialization:
+  type: bool
+  help: Initialize a Git repository after scaffolding?
+  default: true
+
+toolchain_installation:
+  type: bool
+  help: Install the .tool-versions toolchain with mise?
+  default: false
+
+lockfile_generation:
+  type: bool
+  help: Generate uv.lock and pnpm-lock.yaml after scaffolding?
+  default: false

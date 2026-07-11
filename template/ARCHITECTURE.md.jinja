@@ -1,0 +1,35 @@
+# {{ project_name }} Architecture
+
+{{ project_description }}
+
+This document owns the repository-level architecture and invariants. Every
+application and shared package owns an `ARCHITECTURE.md` scoped to its
+directory; add one to any other significant directory when its responsibilities,
+boundaries, data flows, or design decisions require more detail. Agent operating
+constraints are defined in `AGENTS.md`.
+
+## Project structure
+
+```text
+.
+├── .agents/
+│   └── skills/                 # Shared uv/pnpm member for Agent Skills
+├── .claude/
+│   └── skills -> ../.agents/skills # Claude Code view of the same skills
+├── apps/                        # Shared uv/pnpm deployable applications
+├── packages/                    # Shared uv/pnpm reusable packages
+├── .gitignore                  # Local artifacts and credentials excluded from Git
+├── AGENTS.md                   # Agent operating constraints
+├── CLAUDE.md                   # Claude Code entry point for the same constraints
+├── ARCHITECTURE.md             # Repository-level architecture
+├── package.json                # Root pnpm workspace manifest
+├── pyproject.toml              # Root uv workspace configuration
+└── README.md                   # Project overview and onboarding
+```
+
+## Invariants
+
+- Stable project knowledge belongs in tracked documentation or source files.
+- Local execution state, credentials, and private evidence remain outside Git.
+- Reusable deterministic logic belongs in a package or skill-owned script.
+- Qualitative agent workflows are explicit, bounded, and self-describing.
