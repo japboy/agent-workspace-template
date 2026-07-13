@@ -4,9 +4,11 @@
 
 This document owns the repository-level architecture and invariants. Every
 application and shared package owns an `ARCHITECTURE.md` scoped to its
-directory; add one to any other significant directory when its responsibilities,
-boundaries, data flows, or design decisions require more detail. Agent operating
-constraints are defined in `AGENTS.md`.
+directory; add one to another significant non-Skill directory when its
+responsibilities, boundaries, data flows, or design decisions require more
+detail. Under `.agents/skills/`, the collection `ARCHITECTURE.md` is the sole
+architecture document: individual Skills own `SKILL.md` and purpose-specific
+supporting references. Agent operating constraints are defined in `AGENTS.md`.
 
 ## Project structure
 
@@ -20,8 +22,8 @@ constraints are defined in `AGENTS.md`.
 │   └── skills/                 # Canonical shared uv/pnpm member for Agent Skills
 ├── .claude/
 │   └── skills -> ../.agents/skills  # Claude Code development-time view of canonical skills
-├── apps/                       # Shared uv/pnpm deployable applications
-├── packages/                   # Shared uv/pnpm reusable packages
+├── apps/                       # uv/pnpm applications directly invoked by users, Agents, or automations
+├── packages/                   # uv/pnpm language APIs consumed by distinct workspace members
 ├── repos/                      # Optional child Git submodules for parent repositories
 │   └── .gitkeep                # Preserves the empty submodule placement directory
 ├── .gitmodules                 # Empty until Git records child submodule metadata
@@ -39,9 +41,22 @@ constraints are defined in `AGENTS.md`.
 - Stable project knowledge belongs in tracked documentation or source files.
 - Local execution state, credentials, and private evidence remain outside Git.
 - Reusable deterministic logic belongs in a package or skill-owned script.
+- `apps/` owns direct execution surfaces, including CLI, web, native, and
+  automation entry points, together with their runtime and entry-point
+  contracts.
+- `packages/` owns only language-level APIs actually consumed by a distinct
+  application or package; it does not own a direct user, Agent, or automation
+  entry point.
+- Unshared implementation remains in its owning application. Extract only the
+  portion with an actual distinct consumer into `packages/`.
+- An application is not a language-level workspace dependency. A member that
+  needs another member's logic consumes an explicit package instead.
 - Qualitative agent workflows are explicit, bounded, and self-describing.
 - `.agents/skills/` is the only source of truth for skills; `.claude/skills`
   is a development-time relative link to it.
+- `.agents/skills/ARCHITECTURE.md` is the sole architecture document in the
+  Skills subtree. Individual Skills use `SKILL.md` and purpose-specific
+  `references/` files rather than nested `ARCHITECTURE.md` files.
 - `.agents/` is the plugin root. Its manifests reference `./skills/`, which is
   the physical skill directory in the Git subdirectory package.
 - `repos/` contains only optional child Git submodules; `.gitkeep` preserves

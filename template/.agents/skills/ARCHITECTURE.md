@@ -15,9 +15,13 @@ plugin.
 
 - Each direct child skill directory that is meant to be discoverable by Codex
   must contain `SKILL.md`.
+- This file is the sole `ARCHITECTURE.md` in the `.agents/skills/` subtree; do
+  not add an `ARCHITECTURE.md` inside an individual Skill.
 - Skill-specific deterministic helpers belong in the owning skill's `scripts/`
   directory.
-- Long reusable guidance belongs in the owning skill's `references/` directory.
+- Long reusable guidance belongs in the owning skill's `references/` directory
+  in purpose-specific files such as contracts, decision records, evaluation
+  notes, or change histories. Do not create a catch-all `architecture.md`.
 - Output templates or reusable artifacts belong in the owning skill's `assets/`
   directory when needed.
 - This directory is a shared uv and pnpm workspace member. Python helper
@@ -28,5 +32,6 @@ plugin.
 
 Create one directory per skill directly under `.agents/skills/`. Keep the
 workflow in `SKILL.md`, and place supporting resources in the directories
-described above. This keeps each skill self-describing and its dependencies
-local to the workflow that uses them.
+described above. This keeps each skill self-describing, its dependencies local
+to the workflow that uses them, and its detailed documentation progressively
+disclosed.

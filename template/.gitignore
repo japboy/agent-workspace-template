@@ -8,3 +8,6 @@ __pycache__/
 # Node.js artifacts
 node_modules/
 pnpm-debug.log*
+
+# Agent-memory local event store; memory.yml remains repository policy.
+/.agents/memory.db*
