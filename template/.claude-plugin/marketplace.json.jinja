@@ -1,0 +1,8 @@
+{
+  "name": {{ project_slug | tojson }},
+  "owner": {
+    "name": {{ project_name | tojson }}
+  },
+  "description": {{ (project_description if project_description else "Plugins curated by " ~ project_name) | tojson }},
+  "plugins": []
+}

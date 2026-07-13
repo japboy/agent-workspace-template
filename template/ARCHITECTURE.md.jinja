@@ -19,9 +19,14 @@ supporting references. Agent operating constraints are defined in `AGENTS.md`.
 │   │   └── plugin.json         # Claude Code manifest; .agents is the plugin root
 │   ├── .codex-plugin/
 │   │   └── plugin.json         # Codex manifest; .agents is the plugin root
+│   ├── plugins/
+│   │   └── marketplace.json    # Empty Codex parent marketplace catalog
 │   └── skills/                 # Canonical shared uv/pnpm member for Agent Skills
 ├── .claude/
+│   ├── settings.json                # Claude Code project declaration of this marketplace
 │   └── skills -> ../.agents/skills  # Claude Code development-time view of canonical skills
+├── .claude-plugin/
+│   └── marketplace.json        # Empty Claude Code parent marketplace catalog
 ├── apps/                       # uv/pnpm applications directly invoked by users, Agents, or automations
 ├── packages/                   # uv/pnpm language APIs consumed by distinct workspace members
 ├── repos/                      # Optional child Git submodules for parent repositories
@@ -59,6 +64,14 @@ supporting references. Agent operating constraints are defined in `AGENTS.md`.
   `references/` files rather than nested `ARCHITECTURE.md` files.
 - `.agents/` is the plugin root. Its manifests reference `./skills/`, which is
   the physical skill directory in the Git subdirectory package.
+- `.agents/plugins/marketplace.json` and `.claude-plugin/marketplace.json` are
+  empty parent-marketplace placeholders. They do not discover submodules or
+  install plugins; a parent explicitly adds each child plugin entry when it
+  chooses to distribute it.
+- `.claude/settings.json` declares this repository root as the Claude Code
+  `directory` marketplace. Its empty `enabledPlugins` map records that no child
+  plugin is selected until the parent adds an explicit
+  `<plugin>@<marketplace>` entry.
 - `repos/` contains only optional child Git submodules; `.gitkeep` preserves
   the placement directory before any child is added.
 - `.gitmodules` remains empty until `git submodule add` records each child's
