@@ -1,4 +1,4 @@
-_min_copier_version: "9.16.0"
+_min_copier_version: "9.17.0"
 _subdirectory: template
 _preserve_symlinks: true
 
@@ -11,9 +11,9 @@ tool_versions:
   type: yaml
   default:
     python: "3.14.6"
-    uv: "0.11.28"
-    nodejs: "24.18.0"
-    pnpm: "11.10.0"
+    uv: "0.12.0"
+    nodejs: "24.18.1"
+    pnpm: "11.18.0"
   when: false
 
 _tasks:
